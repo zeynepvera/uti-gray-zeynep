@@ -1,8 +1,6 @@
-
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
 from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
-
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
@@ -19,7 +17,6 @@ class InputImage(Input):
 
     class Config:
         title = "Image"
-
 
 class OutputImage(Output):
     name: Literal["outputImage"] = "outputImage"
@@ -47,7 +44,6 @@ class KeepSideFalse(Config):
     class Config:
         title = "Disable"
 
-
 class KeepSideTrue(Config):
     name: Literal["True"] = "True"
     value: Literal[True] = True
@@ -57,19 +53,17 @@ class KeepSideTrue(Config):
     class Config:
         title = "Enable"
 
-
 class KeepSideBBox(Config):
     """
         Rotate image without catting off sides.
     """
-    name: Literal["KeepSide"] = "KeepSide"
+    name: Literal["KeepSide" ] = "KeepSide"
     value: Union[KeepSideTrue, KeepSideFalse]
     type: Literal["object"] = "object"
     field: Literal["dropdownlist"] = "dropdownlist"
 
     class Config:
         title = "Keep Sides"
-
 
 class Degree(Config):
     """
@@ -79,42 +73,36 @@ class Degree(Config):
     value: int = Field(ge=-359.0, le=359.0,default=0)
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
-    placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
 
     class Config:
-        title = "Angle"
+        title = "Angleee"
 
-
-class PackageInputs(Inputs):
+class GrayZeynepExecutorInputs(Inputs):
     inputImage: InputImage
 
 
-class PackageConfigs(Configs):
+class GrayZeynepExecutorConfigs(Configs):
     degree: Degree
     drawBBox: KeepSideBBox
 
-
-class PackageOutputs(Outputs):
-    outputImage: OutputImage
-
-
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+class GrayZeynepExecutorRequest(Request):
+    inputs: Optional[GrayZeynepExecutorInputs]
+    configs: GrayZeynepExecutorConfigs
 
     class Config:
         json_schema_extra = {
             "target": "configs"
         }
 
+class GrayZeynepExecutorOutputs(Outputs):
+    outputImage: OutputImage
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
+class GrayZeynepExecutorResponse(Response):
+    outputs: GrayZeynepExecutorOutputs
 
-
-class PackageExecutor(Config):
-    name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+class GrayZeynepExecutor(Config):
+    name: Literal["GrayZeynepExecutor"] = "GrayZeynepExecutor"
+    value: Union[GrayZeynepExecutorRequest, GrayZeynepExecutorResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
@@ -126,10 +114,9 @@ class PackageExecutor(Config):
             }
         }
 
-
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[GrayZeynepExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
@@ -139,12 +126,10 @@ class ConfigExecutor(Config):
             "target": "value"
         }
 
-
 class PackageConfigs(Configs):
     executor: ConfigExecutor
-
 
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    name: Literal["GrayZeynep"] = "GrayZeynep"
