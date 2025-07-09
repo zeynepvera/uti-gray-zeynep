@@ -75,7 +75,7 @@ class Degree(Config):
     field: Literal["textInput"] = "textInput"
 
     class Config:
-        title = "Angleee"
+        title = "Angleeee"
 
 class GrayZeynepExecutorInputs(Inputs):
     inputImage: InputImage
