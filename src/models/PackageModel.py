@@ -132,4 +132,4 @@ class PackageConfigs(Configs):
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["component"] = "component"
-    name: Literal["GrayZeynep"] = "GrayZeynep"
+    name: Literal["Package"] = "Package"
