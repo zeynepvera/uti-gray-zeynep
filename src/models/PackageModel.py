@@ -75,7 +75,7 @@ class Degree(Config):
     field: Literal["textInput"] = "textInput"
 
     class Config:
-        title = "Angleeee"
+        title = "Angleee"
 
 class GrayZeynepExecutorInputs(Inputs):
     inputImage: InputImage
@@ -132,4 +132,4 @@ class PackageConfigs(Configs):
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    name: Literal["GrayZeynep"] = "GrayZeynep"
