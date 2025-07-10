@@ -1,6 +1,6 @@
 
 from sdks.novavision.src.helper.package import PackageHelper
-from components.Package.src.models.PackageModel import PackageModel, PackageConfigs, ConfigExecutor, GrayZeynepExecutorOutputs, GrayZeynepExecutorResponse, GrayZeynepExecutor, OutputImage
+from components.GrayZeynep.src.models.PackageModel import PackageModel, PackageConfigs, ConfigExecutor, GrayZeynepExecutorOutputs, GrayZeynepExecutorResponse, GrayZeynepExecutor, OutputImage
 
 
 def build_response(context):
