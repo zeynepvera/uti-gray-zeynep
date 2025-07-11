@@ -23,7 +23,7 @@ class FlipExecutor(Component):
         self.request.model = PackageModel(**(self.request.data))
 
 
-        self.flip_code = self.request.get_param("FlipCode")
+        self.flip_code = self.request.get_param("flipCode")
         self.brightness = self.request.get_param("Brightness")
 
         self.imageOne = self.request.get_param("inputImageOne")
@@ -64,14 +64,12 @@ class FlipExecutor(Component):
             img=img1,
             package_uID=self.uID,
             redis_db=self.redis_db,
-            name="outputImageOne"
         )
 
         self.imageTwo = Image.set_frame(
             img=img2,
             package_uID=self.uID,
             redis_db=self.redis_db,
-            name="outputImageTwo"
         )
 
 
