@@ -5,8 +5,8 @@ from components.GrayZeynep.src.models.PackageModel import GrayZeynepExecutorOutp
 from components.GrayZeynep.src.models.PackageModel import FlipExecutorOutputs, FlipExecutorResponse, FlipExecutor
 
 def build_response(context):
-    outputImage = OutputImageOne(value=context.image)
-    grayZeynepExecutorOutputs= GrayZeynepExecutorOutputs(outputImage=outputImage)
+    outputImageOne = OutputImageOne(value=context.image)
+    grayZeynepExecutorOutputs = GrayZeynepExecutorOutputs(outputImageOne=outputImageOne)
     grayZeynepExecutorResponse = GrayZeynepExecutorResponse(outputs=grayZeynepExecutorOutputs)
     grayZeynepExecutor=GrayZeynepExecutor(value=grayZeynepExecutorResponse)
     configexecutor = ConfigExecutor(value=grayZeynepExecutor)

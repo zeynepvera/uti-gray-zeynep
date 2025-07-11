@@ -45,6 +45,7 @@ class GrayZeynepExecutor(Component):
         img.value = self.gray(img.value)
         self.image = Image.set_frame(img=img, package_uID=self.uID, redis_db=self.redis_db)
         packageModel = build_response(context=self)
+
         return packageModel
 
 
