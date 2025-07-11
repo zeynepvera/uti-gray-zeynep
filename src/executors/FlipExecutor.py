@@ -55,8 +55,21 @@ class FlipExecutor(Component):
         img1.value = self.flip(img1.value)
         img2.value = self.flip(img2.value)
 
-        self.imageOne = Image.set_frame(img=img1, package_uID=self.uID, redis_db=self.redis_db)
-        self.imageTwo = Image.set_frame(img=img2, package_uID=self.uID, redis_db=self.redis_db)
+        self.imageOne = Image.set_frame(
+            img=img1,
+            package_uID=self.uID,
+            redis_db=self.redis_db,
+            name="outputImageOne"
+        )
+
+        self.imageTwo = Image.set_frame(
+            img=img2,
+            package_uID=self.uID,
+            redis_db=self.redis_db,
+            name="outputImageTwo"
+        )
+
+
 
         packageModel = build_response_flip(context=self)
         return packageModel
