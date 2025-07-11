@@ -17,8 +17,8 @@ def build_response(context):
 
 
 def build_response_flip(context):
-    outputImageOne = OutputImageOne(value=context.image)
-    outputImagetwo = OutputImageTwo(value=context.image)
+    outputImageOne = OutputImageOne(value=context.imageOne)
+    outputImagetwo = OutputImageTwo(value=context.imageTwo)
     flipExecutorOutputs= FlipExecutorOutputs(outputImageOne=outputImageOne, outputImageTwo=outputImagetwo)
     flipExecutorResponse = FlipExecutorResponse(outputs=flipExecutorOutputs)
     flipExecutor=FlipExecutor(value=flipExecutorResponse)
