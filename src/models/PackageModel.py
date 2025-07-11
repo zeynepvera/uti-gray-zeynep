@@ -2,8 +2,8 @@ from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
 from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
 
-class InputImage(Input):
-    name: Literal["inputImage"] = "inputImage"
+class InputImageOne(Input):
+    name: Literal["inputImageOne"] = "inputImageOne"
     value: Union[List[Image], Image]
     type: str = "object"
 
@@ -16,11 +16,12 @@ class InputImage(Input):
             return "list"
 
     class Config:
-        title = "Image"
+        title = "Input Image One"
 
-class OutputImage(Output):
-    name: Literal["outputImage"] = "outputImage"
-    value: Union[List[Image],Image]
+
+class InputImageTwo(Input):
+    name: Literal["inputImageTwo"] = "inputImageTwo"
+    value: Union[List[Image], Image]
     type: str = "object"
 
     @validator("type", pre=True, always=True)
@@ -32,7 +33,42 @@ class OutputImage(Output):
             return "list"
 
     class Config:
-        title = "Image"
+        title = "Input Image Two"
+
+
+class OutputImageOne(Output):
+    name: Literal["outputImageOne"] = "outputImageOne"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
+
+    class Config:
+        title = "Output Image One"
+
+
+class OutputImageTwo(Output):
+    name: Literal["outputImageTwo"] = "outputImageTwo"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
+
+    class Config:
+        title = "Output Image Two"
+
 
 
 class KeepSideFalse(Config):
@@ -77,8 +113,15 @@ class Degree(Config):
     class Config:
         title = "Angleee"
 
+
+
+
+
+
+
+
 class GrayZeynepExecutorInputs(Inputs):
-    inputImage: InputImage
+    inputImage: InputImageOne
 
 
 class GrayZeynepExecutorConfigs(Configs):
@@ -95,7 +138,7 @@ class GrayZeynepExecutorRequest(Request):
         }
 
 class GrayZeynepExecutorOutputs(Outputs):
-    outputImage: OutputImage
+    outputImage: OutputImageOne
 
 class GrayZeynepExecutorResponse(Response):
     outputs: GrayZeynepExecutorOutputs
@@ -114,17 +157,111 @@ class GrayZeynepExecutor(Config):
             }
         }
 
+
+class FlipVertical(Config):
+    name: Literal["Vertical"] = "Vertical"
+    value: Literal[0] = 0
+    type: Literal["number"] = "number"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Vertical Flip"
+
+class FlipHorizontal(Config):
+    name: Literal["Horizontal"] = "Horizontal"
+    value: Literal[1] = 1
+    type: Literal["number"] = "number"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Horizontal Flip"
+
+class FlipBoth(Config):
+    name: Literal["Both"] = "Both"
+    value: Literal[-1] = -1
+    type: Literal["number"] = "number"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Vertical + Horizontal Flip"
+
+class FlipCode(Config):
+    """
+       Select flip angle from dropdown options.
+
+    """
+    name: Literal["flipCode"] = "flipCode"
+    value: Union[FlipVertical, FlipHorizontal, FlipBoth]
+    type: Literal["object"] = "object"
+    field: Literal["dropdownlist"] = "dropdownlist"
+
+    class Config:
+        title = "Flip Mode"
+
+
+class FlipBrightness(Config):
+    name: Literal["Brightness"] = "Brightness"
+    value: int = Field(default=0, ge= -100, le=100)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title= "Brightness "
+
+
+class FlipExecutorInputs(Inputs):
+    inputImageOne: InputImageOne
+    inputImageTwo: InputImageTwo
+
+
+
+class FlipExecutorConfigs(Configs):
+
+    flipCode: FlipCode
+    brightness: FlipBrightness
+
+class FlipExecutorRequest(Request):
+    inputs: Optional[FlipExecutorInputs]
+    configs: FlipExecutorConfigs
+
+    class Config:
+        json_schema_extra = {
+            "target": "configs"
+        }
+
+class FlipExecutorOutputs(Outputs):
+    outputImageOne: OutputImageOne
+    outputImageTwo: OutputImageTwo
+
+class FlipExecutorResponse(Response):
+    outputs: FlipExecutorOutputs
+
+
+
+class FlipExecutor(Config):
+    name: Literal["FlipExecutor"] = "FlipExecutor"
+    value: Union[FlipExecutorRequest, FlipExecutorResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Package"
+        json_schema_extra = {
+            "target": {
+                "value": 0
+            }
+        }
+
+
+
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[GrayZeynepExecutor]
+    value: Union[GrayZeynepExecutor, FlipExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
         title = "Task"
-        json_schema_extra = {
-            "target": "value"
-        }
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
