@@ -121,7 +121,7 @@ class Degree(Config):
 
 
 class GrayZeynepExecutorInputs(Inputs):
-    inputImage: InputImageOne
+    inputImageOne: InputImageOne
 
 
 class GrayZeynepExecutorConfigs(Configs):
