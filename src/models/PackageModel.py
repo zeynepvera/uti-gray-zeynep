@@ -138,7 +138,7 @@ class GrayZeynepExecutorRequest(Request):
         }
 
 class GrayZeynepExecutorOutputs(Outputs):
-    outputImage: OutputImageOne
+    outputImageOne: OutputImageOne
 
 class GrayZeynepExecutorResponse(Response):
     outputs: GrayZeynepExecutorOutputs
