@@ -23,8 +23,8 @@ class FlipExecutor(Component):
         self.request.model = PackageModel(**(self.request.data))
 
 
-        self.flip_code = self.request.get_param("flipCode")
-        self.brightness = self.request.get_param("brightness")
+        self.flip_code = self.request.get_param("FlipCode")
+        self.brightness = self.request.get_param("Brightness")
 
         self.imageOne = self.request.get_param("inputImageOne")
         self.imageTwo = self.request.get_param("inputImageTwo")
