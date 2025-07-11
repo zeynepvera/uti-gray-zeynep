@@ -19,8 +19,19 @@ class FlipExecutor(Component):
     def __init__(self, request, bootstrap):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
-        self.flip_code = int(self.request.get_param("flipCode", 1))
-        self.brightness=int(self.request.get_param("brightness",0))
+
+        try:
+            flip_code_raw = self.request.get_param("flipCode", 1)
+            self.flip_code = int(flip_code_raw) if flip_code_raw is not None else 1
+        except (ValueError, TypeError):
+            self.flip_code = 1
+
+        try:
+            brightness_raw = self.request.get_param("brightness", 0)
+            self.brightness = int(brightness_raw) if brightness_raw is not None else 0
+        except (ValueError, TypeError):
+            self.brightness = 0
+
         self.imageOne = self.request.get_param("inputImageOne")
         self.imageTwo = self.request.get_param("inputImageTwo")
 
