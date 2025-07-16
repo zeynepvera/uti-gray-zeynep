@@ -71,6 +71,7 @@ class OutputImageTwo(Output):
 
 
 
+
 class KeepSideFalse(Config):
     name: Literal["False"] = "False"
     value: Literal[False] = False
@@ -90,10 +91,7 @@ class KeepSideTrue(Config):
         title = "Enable"
 
 class KeepSideBBox(Config):
-    """
-        Rotate image without catting off sides.
-    """
-    name: Literal["KeepSide" ] = "KeepSide"
+    name: Literal["KeepSide"] = "KeepSide"
     value: Union[KeepSideTrue, KeepSideFalse]
     type: Literal["object"] = "object"
     field: Literal["dropdownlist"] = "dropdownlist"
@@ -102,54 +100,63 @@ class KeepSideBBox(Config):
         title = "Keep Sides"
 
 class Degree(Config):
-    """
-        Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
-    """
     name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
+    value: int = Field(ge=-359.0, le=359.0, default=0)
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
 
     class Config:
         title = "Angleee"
 
-
-class GrayZeynepExecutorInputs(Inputs):
-    inputImageOne: InputImageOne
-
-
-class GrayZeynepExecutorConfigs(Configs):
+class GrayProcessingBasic(Config):
     degree: Degree
-    drawBBox: KeepSideBBox
-
-class GrayZeynepExecutorRequest(Request):
-    inputs: Optional[GrayZeynepExecutorInputs]
-    configs: GrayZeynepExecutorConfigs
-
-    class Config:
-        json_schema_extra = {
-            "target": "configs"
-        }
-
-class GrayZeynepExecutorOutputs(Outputs):
-    outputImageOne: OutputImageOne
-
-class GrayZeynepExecutorResponse(Response):
-    outputs: GrayZeynepExecutorOutputs
-
-class GrayZeynepExecutor(Config):
-    name: Literal["GrayZeynepExecutor"] = "GrayZeynepExecutor"
-    value: Union[GrayZeynepExecutorRequest, GrayZeynepExecutorResponse]
-    type: Literal["object"] = "object"
+    keepSide: KeepSideBBox
+    name: Literal["BasicProcessing"] = "BasicProcessing"
+    value: Literal["BasicProcessing"] = "BasicProcessing"
+    type: Literal["string"] = "string"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
-        json_schema_extra = {
-            "target": {
-                "value": 0
-            }
-        }
+        title = "Basic Gray Processing"
+
+class GrayScale(Config):
+    name: Literal["GrayScale"] = "GrayScale"
+    value: int = Field(default=50, ge=0, le=100)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Gray Scale Intensity"
+
+class GrayContrast(Config):
+    name: Literal["GrayContrast"] = "GrayContrast"
+    value: float = Field(default=1.0, ge=0.1, le=3.0)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Gray Contrast"
+
+class GrayProcessingAdvanced(Config):
+    grayScale: GrayScale
+    grayContrast: GrayContrast
+    name: Literal["AdvancedProcessing"] = "AdvancedProcessing"
+    value: Literal["AdvancedProcessing"] = "AdvancedProcessing"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Advanced Gray Processing"
+
+class GrayProcessingType(Config):
+    name: Literal["grayProcessingType"] = "grayProcessingType"
+    value: Union[GrayProcessingBasic, GrayProcessingAdvanced]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Gray Processing Method"
+
 
 
 class FlipVertical(Config):
@@ -180,10 +187,6 @@ class FlipBoth(Config):
         title = "Vertical + Horizontal Flip"
 
 class FlipCode(Config):
-    """
-       Select flip angle from dropdown options.
-
-    """
     name: Literal["flipCode"] = "flipCode"
     value: Union[FlipVertical, FlipHorizontal, FlipBoth]
     type: Literal["object"] = "object"
@@ -192,27 +195,107 @@ class FlipCode(Config):
     class Config:
         title = "Flip Mode"
 
-
 class FlipBrightness(Config):
     name: Literal["Brightness"] = "Brightness"
-    value: int = Field(default=0, ge= -100, le=100)
+    value: int = Field(default=0, ge=-100, le=100)
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
 
     class Config:
-        title= "Brightness "
+        title = "Brightness"
 
+class FlipOperationSimple(Config):
+    flipCode: FlipCode
+    name: Literal["SimpleFlip"] = "SimpleFlip"
+    value: Literal["SimpleFlip"] = "SimpleFlip"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Simple Flip Operation"
+
+class FlipRotationAngle(Config):
+    name: Literal["FlipRotationAngle"] = "FlipRotationAngle"
+    value: int = Field(default=90, ge=0, le=360)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Rotation Angle"
+
+class FlipQuality(Config):
+    name: Literal["FlipQuality"] = "FlipQuality"
+    value: bool = Field(default=True)
+    type: Literal["bool"] = "bool"
+    field: Literal["checkbox"] = "checkbox"
+
+    class Config:
+        title = "High Quality Processing"
+
+class FlipOperationAdvanced(Config):
+    brightness: FlipBrightness
+    rotationAngle: FlipRotationAngle
+    quality: FlipQuality
+    name: Literal["AdvancedFlip"] = "AdvancedFlip"
+    value: Literal["AdvancedFlip"] = "AdvancedFlip"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Advanced Flip Operation"
+
+class FlipOperationType(Config):
+    name: Literal["flipOperationType"] = "flipOperationType"
+    value: Union[FlipOperationSimple, FlipOperationAdvanced]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Flip Operation Method"
+
+
+
+class GrayZeynepExecutorInputs(Inputs):
+    inputImageOne: InputImageOne
+
+class GrayZeynepExecutorConfigs(Configs):
+    grayProcessingType: GrayProcessingType
+
+class GrayZeynepExecutorRequest(Request):
+    inputs: Optional[GrayZeynepExecutorInputs]
+    configs: GrayZeynepExecutorConfigs
+
+    class Config:
+        json_schema_extra = {
+            "target": "configs"
+        }
+
+class GrayZeynepExecutorOutputs(Outputs):
+    outputImageOne: OutputImageOne
+
+class GrayZeynepExecutorResponse(Response):
+    outputs: GrayZeynepExecutorOutputs
+
+class GrayZeynepExecutor(Config):
+    name: Literal["GrayZeynepExecutor"] = "GrayZeynepExecutor"
+    value: Union[GrayZeynepExecutorRequest, GrayZeynepExecutorResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Package"
+        json_schema_extra = {
+            "target": {
+                "value": 0
+            }
+        }
 
 class FlipExecutorInputs(Inputs):
     inputImageOne: InputImageOne
     inputImageTwo: InputImageTwo
 
-
-
 class FlipExecutorConfigs(Configs):
-
-    flipCode: FlipCode
-    brightness: FlipBrightness
+    flipOperationType: FlipOperationType
 
 class FlipExecutorRequest(Request):
     inputs: Optional[FlipExecutorInputs]
@@ -230,8 +313,6 @@ class FlipExecutorOutputs(Outputs):
 class FlipExecutorResponse(Response):
     outputs: FlipExecutorOutputs
 
-
-
 class FlipExecutor(Config):
     name: Literal["FlipExecutor"] = "FlipExecutor"
     value: Union[FlipExecutorRequest, FlipExecutorResponse]
@@ -245,10 +326,6 @@ class FlipExecutor(Config):
                 "value": 0
             }
         }
-
-
-
-
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"

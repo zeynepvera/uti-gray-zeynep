@@ -19,26 +19,28 @@ class GrayZeynepExecutor(Component):
     def __init__(self, request, bootstrap):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
-        self.rotation_degree = self.request.get_param("Degree")
-        self.keep_side = self.request.get_param("KeepSide")
-        self.image = self.request.get_param("inputImageOne")
 
+        # Dependent dropdown'dan gelen değerleri al
+        self.processing_type = self.request.get_param("grayProcessingType")
+
+        if self.processing_type == "BasicProcessing":
+            self.rotation_degree = self.request.get_param("Degree")
+            self.keep_side = self.request.get_param("KeepSide")
+        elif self.processing_type == "AdvancedProcessing":
+            self.gray_scale = self.request.get_param("GrayScale")
+            self.gray_contrast = self.request.get_param("GrayContrast")
+
+        self.image = self.request.get_param("inputImageOne")
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
         return {}
 
-
-    def gray(self,img):
-
+    def gray(self, img):
         """
         Convert image to grayscale.
         """
-
         return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-
-
 
     def run(self):
         img = Image.get_frame(img=self.image, redis_db=self.redis_db)

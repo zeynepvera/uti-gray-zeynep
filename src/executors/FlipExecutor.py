@@ -1,4 +1,3 @@
-
 """
     It is one of the preprocessing components in which the image is rotated.
 """
@@ -18,43 +17,33 @@ from components.GrayZeynep.src.models.PackageModel import PackageModel
 
 class FlipExecutor(Component):
     def __init__(self, request, bootstrap):
-
-
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
 
+        # Dependent dropdown'dan gelen değerleri al
+        self.operation_type = self.request.get_param("flipOperationType")
 
-        self.flip_code = self.request.get_param("flipCode")
-        self.brightness = self.request.get_param("Brightness")
+        if self.operation_type == "SimpleFlip":
+            self.flip_code = self.request.get_param("flipCode")
+        elif self.operation_type == "AdvancedFlip":
+            self.brightness = self.request.get_param("Brightness")
+            self.rotation_angle = self.request.get_param("FlipRotationAngle")
+            self.quality = self.request.get_param("FlipQuality")
 
         self.imageOne = self.request.get_param("inputImageOne")
         self.imageTwo = self.request.get_param("inputImageTwo")
-
-
-
-
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
         return {}
 
-
-    def flip(self,img):
-
-        flipped= cv2.flip(img,self.flip_code)
-        if self.brightness !=0:
+    def flip(self, img):
+        flipped = cv2.flip(img, self.flip_code)
+        if hasattr(self, 'brightness') and self.brightness != 0:
             flipped = cv2.convertScaleAbs(flipped, alpha=1, beta=self.brightness)
-
         return flipped
 
-
-
-
-
-
-
     def run(self):
-
         img1 = Image.get_frame(img=self.imageOne, redis_db=self.redis_db)
         img2 = Image.get_frame(img=self.imageTwo, redis_db=self.redis_db)
 
@@ -73,12 +62,9 @@ class FlipExecutor(Component):
             redis_db=self.redis_db,
         )
 
-
-
         packageModel = build_response_flip(context=self)
         return packageModel
 
 
 if "__main__" == __name__:
     Executor(sys.argv[1]).run()
-
