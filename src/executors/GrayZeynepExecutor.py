@@ -5,6 +5,7 @@
 import os
 import cv2
 import sys
+import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../'))
 
@@ -23,19 +24,49 @@ class GrayZeynepExecutor(Component):
         self.keep_side = self.request.get_param("KeepSide")
         self.image = self.request.get_param("inputImageOne")
 
+        # Dependent dropdown parametreleri
+        self.gray_method = self.request.get_param("grayMethod")
+        self.load_gray_parameters()
+
+    def load_gray_parameters(self):
+        """Seçilen gray method'a göre parametreleri yükle"""
+        if self.gray_method == "Normal":
+            self.alpha = self.request.get_param("alpha")
+            self.beta = self.request.get_param("beta")
+        elif self.gray_method == "Weighted":
+            self.red_weight = self.request.get_param("red_weight")
+            self.green_weight = self.request.get_param("green_weight")
+            self.blue_weight = self.request.get_param("blue_weight")
+            self.blur_kernel = self.request.get_param("blur_kernel")
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
         return {}
 
-
-    def gray(self,img):
-
+    def gray(self, img):
         """
-        Convert image to grayscale.
+        Convert image to grayscale based on selected method.
         """
+        if self.gray_method == "Normal":
+            # Normal grayscale conversion with alpha and beta adjustments
+            gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            gray_img = cv2.convertScaleAbs(gray_img, alpha=self.alpha, beta=self.beta)
+            return gray_img
 
-        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        elif self.gray_method == "Weighted":
+            # Weighted grayscale conversion
+            b, g, r = cv2.split(img)
+            gray_img = (self.red_weight * r + self.green_weight * g + self.blue_weight * b).astype(np.uint8)
+
+            # Apply blur if kernel size > 1
+            if self.blur_kernel > 1:
+                gray_img = cv2.blur(gray_img, (self.blur_kernel, self.blur_kernel))
+
+            return gray_img
+
+        else:
+            # Default grayscale conversion
+            return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 
 
