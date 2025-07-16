@@ -70,42 +70,6 @@ class OutputImageTwo(Output):
         title = "Output Image Two"
 
 
-class GrayTypeNormal(Config):
-    name: Literal["Normal"] = "Normal"
-    alpha: int = Field(default=1, ge=0, le=5)
-    beta: int = Field(default=0, ge=-100, le=100)
-    value: Literal["Normal"] = "Normal"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Normal Gray"
-
-
-class GrayTypeWeighted(Config):
-    name: Literal["Weighted"] = "Weighted"
-    red_weight: float = Field(default=0.299, ge=0.0, le=1.0)
-    green_weight: float = Field(default=0.587, ge=0.0, le=1.0)
-    blue_weight: float = Field(default=0.114, ge=0.0, le=1.0)
-    blur_kernel: int = Field(default=3, ge=1, le=15)
-    value: Literal["Weighted"] = "Weighted"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Weighted Gray"
-
-
-
-class GrayMethod(Config):
-    name: Literal["grayMethod"] = "grayMethod"
-    value: Union[GrayTypeNormal, GrayTypeWeighted]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Gray Method"
-
 
 class KeepSideFalse(Config):
     name: Literal["False"] = "False"
@@ -157,7 +121,6 @@ class GrayZeynepExecutorInputs(Inputs):
 class GrayZeynepExecutorConfigs(Configs):
     degree: Degree
     drawBBox: KeepSideBBox
-    grayMethod: GrayMethod
 
 class GrayZeynepExecutorRequest(Request):
     inputs: Optional[GrayZeynepExecutorInputs]
@@ -181,47 +144,12 @@ class GrayZeynepExecutor(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Gray Model"
+        title = "Package"
         json_schema_extra = {
             "target": {
                 "value": 0
             }
         }
-
-
-class FlipModeSimple(Config):
-    name: Literal["Simple"] = "Simple"
-    flip_code: Union["FlipVertical", "FlipHorizontal", "FlipBoth"]
-    contrast: float = Field(default=1.0, ge=0.1, le=3.0)
-    value: Literal["Simple"] = "Simple"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Simple Flip"
-
-
-class FlipModeAdvanced(Config):
-    name: Literal["Advanced"] = "Advanced"
-    flip_code: Union["FlipVertical", "FlipHorizontal", "FlipBoth"]
-    gamma: float = Field(default=1.0, ge=0.1, le=3.0)
-    noise_level: int = Field(default=0, ge=0, le=50)
-    blur_strength: int = Field(default=0, ge=0, le=10)
-    value: Literal["Advanced"] = "Advanced"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Advanced Flip"
-
-class FlipProcessType(Config):
-    name: Literal["flipProcessType"] = "flipProcessType"
-    value: Union[FlipModeSimple, FlipModeAdvanced]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Process Type"
 
 
 class FlipVertical(Config):
@@ -285,8 +213,6 @@ class FlipExecutorConfigs(Configs):
 
     flipCode: FlipCode
     brightness: FlipBrightness
-    flipProcessType: FlipProcessType
-
 
 class FlipExecutorRequest(Request):
     inputs: Optional[FlipExecutorInputs]
@@ -313,7 +239,7 @@ class FlipExecutor(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Flip Model"
+        title = "Package"
         json_schema_extra = {
             "target": {
                 "value": 0
@@ -331,7 +257,7 @@ class ConfigExecutor(Config):
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
-        title = "Choose the Model"
+        title = "Task"
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
