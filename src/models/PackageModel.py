@@ -344,6 +344,8 @@ class FlipExecutorInputs(Inputs):
 
 class FlipExecutorConfigs(Configs):
     flipOperationType: FlipOperationType
+    flipSimpleConfig: Optional[FlipSimpleConfig]
+    flipAdvancedConfig: Optional[FlipAdvancedConfig]
 
 class FlipExecutorRequest(Request):
     inputs: Optional[FlipExecutorInputs]
