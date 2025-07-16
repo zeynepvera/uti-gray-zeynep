@@ -20,12 +20,12 @@ class FlipExecutor(Component):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
 
-        # Dependent dropdown'dan gelen değerleri al
         self.operation_type = self.request.get_param("flipOperationType")
 
         if self.operation_type == "SimpleFlip":
             self.flip_code = self.request.get_param("flipCode")
         elif self.operation_type == "AdvancedFlip":
+
             self.brightness = self.request.get_param("brightness")
             self.rotation_angle = self.request.get_param("rotationAngle")
             self.quality = self.request.get_param("quality")

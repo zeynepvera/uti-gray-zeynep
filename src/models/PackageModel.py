@@ -267,17 +267,16 @@ class FlipQuality(Config):
         title = "High Quality Processing"
 
 
+
+
 class FlipAdvancedConfig(Config):
     name: Literal["flipAdvancedConfig"] = "flipAdvancedConfig"
-    brightness: FlipBrightness
-    rotationAngle: FlipRotationAngle
-    quality: FlipQuality
+    value: Union[FlipBrightness, FlipRotationAngle, FlipQuality]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
         title = "Advanced Configuration"
-
 
 
 
