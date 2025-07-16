@@ -108,6 +108,19 @@ class Degree(Config):
     class Config:
         title = "Angleee"
 
+
+
+class GrayBasicConfig(Config):
+    name: Literal["grayBasicConfig"] = "grayBasicConfig"
+    value: Union[Degree, KeepSideBBox]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Basic Configuration"
+
+
+
 class GrayProcessingBasic(Config):
     degree: Degree
     keepSide: KeepSideBBox
@@ -136,6 +149,17 @@ class GrayContrast(Config):
 
     class Config:
         title = "Gray Contrast"
+
+
+class GrayAdvancedConfig(Config):
+    name: Literal["grayAdvancedConfig"] = "grayAdvancedConfig"
+    value: Union[GrayScale, GrayContrast]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Advanced Configuration"
+
 
 class GrayProcessingAdvanced(Config):
     grayScale: GrayScale
@@ -204,6 +228,16 @@ class FlipBrightness(Config):
     class Config:
         title = "Brightness"
 
+
+class FlipSimpleConfig(Config):
+    name: Literal["flipSimpleConfig"] = "flipSimpleConfig"
+    value: FlipCode
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Simple Configuration"
+
 class FlipOperationSimple(Config):
     flipCode: FlipCode
     name: Literal["SimpleFlip"] = "SimpleFlip"
@@ -231,6 +265,19 @@ class FlipQuality(Config):
 
     class Config:
         title = "High Quality Processing"
+
+
+class FlipAdvancedConfig(Config):
+    name: Literal["flipAdvancedConfig"] = "flipAdvancedConfig"
+    value: Union[FlipBrightness, FlipRotationAngle, FlipQuality]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+
+    class Config:
+        title = "Advanced Configuration"
+
+
+
 
 class FlipOperationAdvanced(Config):
     brightness: FlipBrightness
