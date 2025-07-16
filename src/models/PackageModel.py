@@ -181,7 +181,7 @@ class GrayZeynepExecutor(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
+        title = "Gray Model"
         json_schema_extra = {
             "target": {
                 "value": 0
@@ -313,7 +313,7 @@ class FlipExecutor(Config):
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
+        title = "Flip Model"
         json_schema_extra = {
             "target": {
                 "value": 0
