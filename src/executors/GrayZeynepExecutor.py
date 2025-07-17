@@ -1,10 +1,11 @@
 """
-    It is one of the preprocessing components in which the image is rotated.
+    It is one of the preprocessing components in which the image is converted to grayscale.
 """
 
 import os
 import cv2
 import sys
+import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../'))
 
@@ -20,12 +21,11 @@ class GrayZeynepExecutor(Component):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
 
-        # Dependent dropdown'dan gelen değerleri al
         self.processing_type = self.request.get_param("grayProcessingType")
 
         if self.processing_type == "BasicProcessing":
-            self.rotation_degree = self.request.get_param("Degree")
-            self.keep_side = self.request.get_param("KeepSide")
+            self.blur_kernel = self.request.get_param("BlurKernel")
+            self.morphology_enabled = self.request.get_param("MorphologyEnabled")
         elif self.processing_type == "AdvancedProcessing":
             self.gray_scale = self.request.get_param("GrayScale")
             self.gray_contrast = self.request.get_param("GrayContrast")
@@ -36,11 +36,43 @@ class GrayZeynepExecutor(Component):
     def bootstrap(config: dict) -> dict:
         return {}
 
+    def apply_blur(self, img, kernel_size):
+        """Apply Gaussian blur to the image."""
+        if kernel_size > 1:
+            return cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)
+        return img
+
+    def apply_morphology(self, img):
+        """Apply morphological operations (opening) to clean up the image."""
+        kernel = np.ones((3, 3), np.uint8)
+        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+
+    def adjust_brightness_contrast(self, img, brightness=0, contrast=1.0):
+        """Adjust brightness and contrast of the image."""
+        return cv2.convertScaleAbs(img, alpha=contrast, beta=brightness)
+
     def gray(self, img):
         """
-        Convert image to grayscale.
+        Convert image to grayscale with different processing methods.
         """
-        return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        if self.processing_type == "BasicProcessing":
+            if hasattr(self, 'blur_kernel') and self.blur_kernel > 1:
+                gray_img = self.apply_blur(gray_img, self.blur_kernel)
+
+            if hasattr(self, 'morphology_enabled') and self.morphology_enabled:
+                gray_img = self.apply_morphology(gray_img)
+
+        elif self.processing_type == "AdvancedProcessing":
+            if hasattr(self, 'gray_scale') and hasattr(self, 'gray_contrast'):
+                brightness = int((self.gray_scale - 50) * 2)  # 0-100 -> -100 ile +100
+
+                contrast = self.gray_contrast
+
+                gray_img = self.adjust_brightness_contrast(gray_img, brightness, contrast)
+
+        return gray_img
 
     def run(self):
         img = Image.get_frame(img=self.image, redis_db=self.redis_db)

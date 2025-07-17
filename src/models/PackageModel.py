@@ -1,7 +1,7 @@
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
 from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
-##
+
 class InputImageOne(Input):
     name: Literal["inputImageOne"] = "inputImageOne"
     value: Union[List[Image], Image]
@@ -70,8 +70,7 @@ class OutputImageTwo(Output):
         title = "Output Image Two"
 
 
-# GrayZeynep Executor Configs
-class KeepSideFalse(Config):
+class MorphologyFalse(Config):
     name: Literal["False"] = "False"
     value: Literal[False] = False
     type: Literal["bool"] = "bool"
@@ -80,7 +79,7 @@ class KeepSideFalse(Config):
     class Config:
         title = "Disable"
 
-class KeepSideTrue(Config):
+class MorphologyTrue(Config):
     name: Literal["True"] = "True"
     value: Literal[True] = True
     type: Literal["bool"] = "bool"
@@ -89,36 +88,27 @@ class KeepSideTrue(Config):
     class Config:
         title = "Enable"
 
-class KeepSideBBox(Config):
-    name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
+class MorphologyEnabled(Config):
+    name: Literal["MorphologyEnabled"] = "MorphologyEnabled"
+    value: Union[MorphologyTrue, MorphologyFalse]
     type: Literal["object"] = "object"
     field: Literal["dropdownlist"] = "dropdownlist"
 
     class Config:
-        title = "Keep Sides"
+        title = "Morphology Filter"
 
-class Degree(Config):
-    name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0, default=0)
+class BlurKernel(Config):
+    name: Literal["BlurKernel"] = "BlurKernel"
+    value: int = Field(ge=1, le=15, default=1)
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
 
     class Config:
-        title = "Angleee"
-
-class GrayBasicConfig(Config):
-    name: Literal["grayBasicConfig"] = "grayBasicConfig"
-    value: Union[Degree, KeepSideBBox]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Basic Configuration"
+        title = "Blur Kernel Size"
 
 class GrayProcessingBasic(Config):
-    degree: Degree
-    keepSide: KeepSideBBox
+    blurKernel: BlurKernel
+    morphologyEnabled: MorphologyEnabled
     name: Literal["BasicProcessing"] = "BasicProcessing"
     value: Literal["BasicProcessing"] = "BasicProcessing"
     type: Literal["string"] = "string"
@@ -144,15 +134,6 @@ class GrayContrast(Config):
 
     class Config:
         title = "Gray Contrast"
-
-class GrayAdvancedConfig(Config):
-    name: Literal["grayAdvancedConfig"] = "grayAdvancedConfig"
-    value: Union[GrayScale, GrayContrast]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Advanced Configuration"
 
 class GrayProcessingAdvanced(Config):
     grayScale: GrayScale
@@ -220,27 +201,6 @@ class FlipBrightness(Config):
 
     class Config:
         title = "Brightness"
-
-class FlipSimpleConfig(Config):
-    flipCode: FlipCode
-    name: Literal["flipSimpleConfig"] = "flipSimpleConfig"
-    value: FlipCode
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Simple Configuration"
-
-class FlipAdvancedConfig(Config):
-    flipCode: FlipCode
-    brightness: FlipBrightness
-    name: Literal["flipAdvancedConfig"] = "flipAdvancedConfig"
-    value: Union[FlipCode, FlipBrightness]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Advanced Configuration"
 
 class FlipOperationSimple(Config):
     flipCode: FlipCode
