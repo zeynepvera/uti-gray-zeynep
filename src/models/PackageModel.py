@@ -156,7 +156,7 @@ class GrayProcessingType(Config):
         title = "Gray Processing Method"
 
 
-# Flip Executor Configs
+# Flip  Configs
 class FlipVertical(Config):
     name: Literal["Vertical"] = "Vertical"
     value: Literal[0] = 0
@@ -234,72 +234,72 @@ class FlipOperationType(Config):
 
 
 # Executor Configs
-class GrayZeynepExecutorInputs(Inputs):
+class GrayInputs(Inputs):
     inputImageOne: InputImageOne
 
-class GrayZeynepExecutorConfigs(Configs):
+class GrayConfigs(Configs):
     grayProcessingType: GrayProcessingType
 
-class GrayZeynepExecutorRequest(Request):
-    inputs: Optional[GrayZeynepExecutorInputs]
-    configs: GrayZeynepExecutorConfigs
+class GrayRequest(Request):
+    inputs: Optional[GrayInputs]
+    configs: GrayConfigs
 
     class Config:
         json_schema_extra = {
             "target": "configs"
         }
 
-class GrayZeynepExecutorOutputs(Outputs):
+class GrayOutputs(Outputs):
     outputImageOne: OutputImageOne
 
-class GrayZeynepExecutorResponse(Response):
-    outputs: GrayZeynepExecutorOutputs
+class GrayResponse(Response):
+    outputs: GrayOutputs
 
-class GrayZeynepExecutor(Config):
-    name: Literal["GrayZeynepExecutor"] = "GrayZeynepExecutor"
-    value: Union[GrayZeynepExecutorRequest, GrayZeynepExecutorResponse]
+class Gray(Config):
+    name: Literal["Gray"] = "Gray"
+    value: Union[GrayRequest, GrayResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Gray Zeynep Executor"
+        title = "Gray"
         json_schema_extra = {
             "target": {
                 "value": 0
             }
         }
 
-class FlipExecutorInputs(Inputs):
+class FlipInputs(Inputs):
     inputImageOne: InputImageOne
     inputImageTwo: InputImageTwo
 
-class FlipExecutorConfigs(Configs):
+class FlipConfigs(Configs):
     flipOperationType: FlipOperationType
 
-class FlipExecutorRequest(Request):
-    inputs: Optional[FlipExecutorInputs]
-    configs: FlipExecutorConfigs
+class FlipRequest(Request):
+    inputs: Optional[FlipInputs]
+    configs: FlipConfigs
 
     class Config:
         json_schema_extra = {
             "target": "configs"
         }
 
-class FlipExecutorOutputs(Outputs):
+class FlipOutputs(Outputs):
     outputImageOne: OutputImageOne
     outputImageTwo: OutputImageTwo
 
-class FlipExecutorResponse(Response):
-    outputs: FlipExecutorOutputs
+class FlipResponse(Response):
+    outputs: FlipOutputs
 
-class FlipExecutor(Config):
-    name: Literal["FlipExecutor"] = "FlipExecutor"
-    value: Union[FlipExecutorRequest, FlipExecutorResponse]
+class Flip(Config):
+    name: Literal["Flip"] = "Flip"
+    value: Union[FlipRequest, FlipResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Flip Executor"
+        title = "Flip "
         json_schema_extra = {
             "target": {
                 "value": 0
@@ -308,7 +308,7 @@ class FlipExecutor(Config):
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[GrayZeynepExecutor, FlipExecutor]
+    value: Union[Gray, Flip]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
