@@ -25,10 +25,9 @@ class FlipExecutor(Component):
         if self.operation_type == "SimpleFlip":
             self.flip_code = self.request.get_param("flipCode")
         elif self.operation_type == "AdvancedFlip":
-
-            self.brightness = self.request.get_param("brightness")
-            self.rotation_angle = self.request.get_param("rotationAngle")
-            self.quality = self.request.get_param("quality")
+            self.brightness = self.request.get_param("Brightness")
+            self.rotation_angle = self.request.get_param("FlipRotationAngle")
+            self.quality = self.request.get_param("FlipQuality")
 
         self.imageOne = self.request.get_param("inputImageOne")
         self.imageTwo = self.request.get_param("inputImageTwo")
@@ -43,12 +42,14 @@ class FlipExecutor(Component):
         elif self.operation_type == "AdvancedFlip":
             flipped = img.copy()
 
+            # Rotation işlemi
             if hasattr(self, 'rotation_angle') and self.rotation_angle != 0:
                 height, width = flipped.shape[:2]
                 center = (width // 2, height // 2)
                 rotation_matrix = cv2.getRotationMatrix2D(center, self.rotation_angle, 1.0)
                 flipped = cv2.warpAffine(flipped, rotation_matrix, (width, height))
 
+            # Brightness işlemi
             if hasattr(self, 'brightness') and self.brightness != 0:
                 flipped = cv2.convertScaleAbs(flipped, alpha=1, beta=self.brightness)
 

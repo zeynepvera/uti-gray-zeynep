@@ -70,8 +70,7 @@ class OutputImageTwo(Output):
         title = "Output Image Two"
 
 
-
-
+# GrayZeynep Executor Configs
 class KeepSideFalse(Config):
     name: Literal["False"] = "False"
     value: Literal[False] = False
@@ -108,8 +107,6 @@ class Degree(Config):
     class Config:
         title = "Angleee"
 
-
-
 class GrayBasicConfig(Config):
     name: Literal["grayBasicConfig"] = "grayBasicConfig"
     value: Union[Degree, KeepSideBBox]
@@ -118,8 +115,6 @@ class GrayBasicConfig(Config):
 
     class Config:
         title = "Basic Configuration"
-
-
 
 class GrayProcessingBasic(Config):
     degree: Degree
@@ -150,7 +145,6 @@ class GrayContrast(Config):
     class Config:
         title = "Gray Contrast"
 
-
 class GrayAdvancedConfig(Config):
     name: Literal["grayAdvancedConfig"] = "grayAdvancedConfig"
     value: Union[GrayScale, GrayContrast]
@@ -159,7 +153,6 @@ class GrayAdvancedConfig(Config):
 
     class Config:
         title = "Advanced Configuration"
-
 
 class GrayProcessingAdvanced(Config):
     grayScale: GrayScale
@@ -182,7 +175,7 @@ class GrayProcessingType(Config):
         title = "Gray Processing Method"
 
 
-
+# Flip Executor Configs
 class FlipVertical(Config):
     name: Literal["Vertical"] = "Vertical"
     value: Literal[0] = 0
@@ -228,26 +221,6 @@ class FlipBrightness(Config):
     class Config:
         title = "Brightness"
 
-
-class FlipSimpleConfig(Config):
-    name: Literal["flipSimpleConfig"] = "flipSimpleConfig"
-    value: FlipCode
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Simple Configuration"
-
-class FlipOperationSimple(Config):
-    flipCode: FlipCode
-    name: Literal["SimpleFlip"] = "SimpleFlip"
-    value: Literal["SimpleFlip"] = "SimpleFlip"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Simple Flip Operation"
-
 class FlipRotationAngle(Config):
     name: Literal["FlipRotationAngle"] = "FlipRotationAngle"
     value: int = Field(default=90, ge=0, le=360)
@@ -266,8 +239,14 @@ class FlipQuality(Config):
     class Config:
         title = "High Quality Processing"
 
+class FlipSimpleConfig(Config):
+    name: Literal["flipSimpleConfig"] = "flipSimpleConfig"
+    value: FlipCode
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
-
+    class Config:
+        title = "Simple Configuration"
 
 class FlipAdvancedConfig(Config):
     name: Literal["flipAdvancedConfig"] = "flipAdvancedConfig"
@@ -278,12 +257,18 @@ class FlipAdvancedConfig(Config):
     class Config:
         title = "Advanced Configuration"
 
+class FlipOperationSimple(Config):
+    flipSimpleConfig: FlipSimpleConfig
+    name: Literal["SimpleFlip"] = "SimpleFlip"
+    value: Literal["SimpleFlip"] = "SimpleFlip"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
 
+    class Config:
+        title = "Simple Flip Operation"
 
 class FlipOperationAdvanced(Config):
-    brightness: FlipBrightness
-    rotationAngle: FlipRotationAngle
-    quality: FlipQuality
+    flipAdvancedConfig: FlipAdvancedConfig
     name: Literal["AdvancedFlip"] = "AdvancedFlip"
     value: Literal["AdvancedFlip"] = "AdvancedFlip"
     type: Literal["string"] = "string"
@@ -302,7 +287,7 @@ class FlipOperationType(Config):
         title = "Flip Operation Method"
 
 
-
+# Executor Configs
 class GrayZeynepExecutorInputs(Inputs):
     inputImageOne: InputImageOne
 
