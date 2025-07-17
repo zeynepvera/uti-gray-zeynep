@@ -5,6 +5,7 @@
 import os
 import cv2
 import sys
+
 ##
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../../../'))
 
@@ -25,9 +26,8 @@ class FlipExecutor(Component):
         if self.operation_type == "SimpleFlip":
             self.flip_code = self.request.get_param("flipCode")
         elif self.operation_type == "AdvancedFlip":
+            self.flip_code = self.request.get_param("flipCode")
             self.brightness = self.request.get_param("Brightness")
-            self.rotation_angle = self.request.get_param("FlipRotationAngle")
-            self.quality = self.request.get_param("FlipQuality")
 
         self.imageOne = self.request.get_param("inputImageOne")
         self.imageTwo = self.request.get_param("inputImageTwo")
@@ -40,16 +40,10 @@ class FlipExecutor(Component):
         if self.operation_type == "SimpleFlip":
             flipped = cv2.flip(img, self.flip_code)
         elif self.operation_type == "AdvancedFlip":
-            flipped = img.copy()
+            # Önce flip işlemi
+            flipped = cv2.flip(img, self.flip_code)
 
-            # Rotation işlemi
-            if hasattr(self, 'rotation_angle') and self.rotation_angle != 0:
-                height, width = flipped.shape[:2]
-                center = (width // 2, height // 2)
-                rotation_matrix = cv2.getRotationMatrix2D(center, self.rotation_angle, 1.0)
-                flipped = cv2.warpAffine(flipped, rotation_matrix, (width, height))
-
-            # Brightness işlemi
+            # Sonra brightness işlemi
             if hasattr(self, 'brightness') and self.brightness != 0:
                 flipped = cv2.convertScaleAbs(flipped, alpha=1, beta=self.brightness)
 

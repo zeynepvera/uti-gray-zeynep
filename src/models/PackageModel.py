@@ -221,25 +221,8 @@ class FlipBrightness(Config):
     class Config:
         title = "Brightness"
 
-class FlipRotationAngle(Config):
-    name: Literal["FlipRotationAngle"] = "FlipRotationAngle"
-    value: int = Field(default=90, ge=0, le=360)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-
-    class Config:
-        title = "Rotation Angle"
-
-class FlipQuality(Config):
-    name: Literal["FlipQuality"] = "FlipQuality"
-    value: bool = Field(default=True)
-    type: Literal["bool"] = "bool"
-    field: Literal["checkbox"] = "checkbox"
-
-    class Config:
-        title = "High Quality Processing"
-
 class FlipSimpleConfig(Config):
+    flipCode: FlipCode
     name: Literal["flipSimpleConfig"] = "flipSimpleConfig"
     value: FlipCode
     type: Literal["object"] = "object"
@@ -249,8 +232,10 @@ class FlipSimpleConfig(Config):
         title = "Simple Configuration"
 
 class FlipAdvancedConfig(Config):
+    flipCode: FlipCode
+    brightness: FlipBrightness
     name: Literal["flipAdvancedConfig"] = "flipAdvancedConfig"
-    value: Union[FlipBrightness, FlipRotationAngle, FlipQuality]
+    value: Union[FlipCode, FlipBrightness]
     type: Literal["object"] = "object"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
@@ -258,7 +243,7 @@ class FlipAdvancedConfig(Config):
         title = "Advanced Configuration"
 
 class FlipOperationSimple(Config):
-    flipSimpleConfig: FlipSimpleConfig
+    flipCode: FlipCode
     name: Literal["SimpleFlip"] = "SimpleFlip"
     value: Literal["SimpleFlip"] = "SimpleFlip"
     type: Literal["string"] = "string"
@@ -268,7 +253,8 @@ class FlipOperationSimple(Config):
         title = "Simple Flip Operation"
 
 class FlipOperationAdvanced(Config):
-    flipAdvancedConfig: FlipAdvancedConfig
+    flipCode: FlipCode
+    brightness: FlipBrightness
     name: Literal["AdvancedFlip"] = "AdvancedFlip"
     value: Literal["AdvancedFlip"] = "AdvancedFlip"
     type: Literal["string"] = "string"
@@ -329,8 +315,6 @@ class FlipExecutorInputs(Inputs):
 
 class FlipExecutorConfigs(Configs):
     flipOperationType: FlipOperationType
-    flipSimpleConfig: Optional[FlipSimpleConfig]
-    flipAdvancedConfig: Optional[FlipAdvancedConfig]
 
 class FlipExecutorRequest(Request):
     inputs: Optional[FlipExecutorInputs]
