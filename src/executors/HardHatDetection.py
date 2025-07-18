@@ -9,7 +9,7 @@ from sdks.novavision.src.media.image import Image
 from sdks.novavision.src.base.capsule import Capsule
 from sdks.novavision.src.helper.executor import Executor
 
-from components.GrayZeynep.src.utils.yolo_utils import load_model
+from components.GrayZeynep.src.utils.hardhat_util import load_model
 from components.GrayZeynep.src.models.PackageModel import PackageModel
 
 
