@@ -31,10 +31,14 @@ class Gray(Component):
             self.gray_contrast = self.request.get_param("GrayContrast")
 
         self.image = self.request.get_param("inputImageOne")
+        self.bootstrap['sayac'] += 1
+        print(self.bootstrap["sayac"])
 
     @staticmethod
     def bootstrap(config: dict) -> dict:
-        return {}
+        sayac = 0
+        return {"sayac": sayac}
+
 
     def apply_blur(self, img, kernel_size):
         """Apply Gaussian blur to the image."""
