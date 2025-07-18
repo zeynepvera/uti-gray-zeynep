@@ -307,79 +307,27 @@ class Flip(Config):
         }
 
 
-# HardHat Detection Configs
-class ConfidenceThreshold(Config):
-    name: Literal["ConfidenceThreshold"] = "ConfidenceThreshold"
-    value: float = Field(default=0.5, ge=0.1, le=1.0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
 
-    class Config:
-        title = "Confidence Threshold"
-
-class IouThreshold(Config):
-    name: Literal["IouThreshold"] = "IouThreshold"
-    value: float = Field(default=0.45, ge=0.1, le=1.0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-
-    class Config:
-        title = "IoU Threshold"
-
-class HardHatDetectionBasic(Config):
-    confidenceThreshold: ConfidenceThreshold
-    name: Literal["BasicDetection"] = "BasicDetection"
-    value: Literal["BasicDetection"] = "BasicDetection"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Basic Hard Hat Detection"
-
-class HardHatDetectionAdvanced(Config):
-    confidenceThreshold: ConfidenceThreshold
-    iouThreshold: IouThreshold
-    name: Literal["AdvancedDetection"] = "AdvancedDetection"
-    value: Literal["AdvancedDetection"] = "AdvancedDetection"
-    type: Literal["string"] = "string"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Advanced Hard Hat Detection"
-
-class HardHatDetectionType(Config):
-    name: Literal["hardHatDetectionType"] = "hardHatDetectionType"
-    value: Union[HardHatDetectionBasic, HardHatDetectionAdvanced]
-    type: Literal["object"] = "object"
-    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
-
-    class Config:
-        title = "Hard Hat Detection Method"
-
-# HardHat Executor Configs
 class HardHatInputs(Inputs):
     inputImageOne: InputImageOne
-
-class HardHatConfigs(Configs):
-    hardHatDetectionType: HardHatDetectionType
-
-class HardHatRequest(Request):
-    inputs: Optional[HardHatInputs]
-    configs: HardHatConfigs
-
-    class Config:
-        json_schema_extra = {
-            "target": "configs"
-        }
 
 class HardHatOutputs(Outputs):
     outputImageOne: OutputImageOne
 
+class HardHatRequest(Request):
+    inputs: Optional[HardHatInputs]
+    configs: Configs = Configs()  # boş configs
+
+    class Config:
+        json_schema_extra = {
+            "target": "inputs"
+        }
+
 class HardHatResponse(Response):
     outputs: HardHatOutputs
 
-class HardHat(Config):
-    name: Literal["HardHat"] = "HardHat"
+class HardHatDetection(Config):
+    name: Literal["HardHatDetection"] = "HardHatDetection"
     value: Union[HardHatRequest, HardHatResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
@@ -392,9 +340,11 @@ class HardHat(Config):
             }
         }
 
+
+
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[Gray, Flip, HardHat]
+    value: Union[Gray, Flip, HardHatDetection]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
