@@ -308,43 +308,10 @@ class Flip(Config):
 
 
 
-class HardHatInputs(Inputs):
-    inputImageOne: InputImageOne
-
-class HardHatOutputs(Outputs):
-    outputImageOne: OutputImageOne
-
-class HardHatRequest(Request):
-    inputs: Optional[HardHatInputs]
-    configs: Configs = Configs()  # boş configs
-
-    class Config:
-        json_schema_extra = {
-            "target": "inputs"
-        }
-
-class HardHatResponse(Response):
-    outputs: HardHatOutputs
-
-class HardHatDetection(Config):
-    name: Literal["HardHatDetection"] = "HardHatDetection"
-    value: Union[HardHatRequest, HardHatResponse]
-    type: Literal["object"] = "object"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Hard Hat Detection"
-        json_schema_extra = {
-            "target": {
-                "value": 0
-            }
-        }
-
-
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[Gray, Flip, HardHatDetection]
+    value: Union[Gray, Flip]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
