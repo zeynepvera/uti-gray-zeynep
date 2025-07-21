@@ -307,11 +307,66 @@ class Flip(Config):
         }
 
 
+# Image Classifier Configs
+class ConfidenceThreshold(Config):
+    name: Literal["confidenceThreshold"] = "confidenceThreshold"
+    value: float = Field(default=0.1, ge=0.0, le=1.0)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Confidence Threshold"
+
+class TopK(Config):
+    name: Literal["topK"] = "topK"
+    value: int = Field(default=5, ge=1, le=10)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Top K Predictions"
+
+class ImageClassifierInputs(Inputs):
+    inputImageOne: InputImageOne
+
+class ImageClassifierConfigs(Configs):
+    confidenceThreshold: ConfidenceThreshold
+    topK: TopK
+
+class ImageClassifierRequest(Request):
+    inputs: Optional[ImageClassifierInputs]
+    configs: ImageClassifierConfigs
+
+    class Config:
+        json_schema_extra = {
+            "target": "configs"
+        }
+
+class ImageClassifierOutputs(Outputs):
+    outputImageOne: OutputImageOne
+
+class ImageClassifierResponse(Response):
+    outputs: ImageClassifierOutputs
+
+class ImageClassifier(Config):
+    name: Literal["ImageClassifier"] = "ImageClassifier"
+    value: Union[ImageClassifierRequest, ImageClassifierResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Image Classifier"
+        json_schema_extra = {
+            "target": {
+                "value": 0
+            }
+        }
+
 
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[Gray, Flip]
+    value: Union[Gray, Flip, ImageClassifier]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
