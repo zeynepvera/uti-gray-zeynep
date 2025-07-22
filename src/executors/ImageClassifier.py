@@ -164,7 +164,3 @@ class ImageClassifier(Component):
 
         packageModel = build_response_classifier(context=self)
         return packageModel
-
-
-if "__main__" == __name__:
-    Executor(sys.argv[1]).run()
