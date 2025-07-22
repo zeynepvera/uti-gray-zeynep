@@ -70,7 +70,7 @@ class ImageClassifier(Component):
         try:
             with open(json_path, 'r') as f:
                 class_labels = json.load(f)
-            print(f" ImageNet sınıfları yüklendi: {len(class_labels)} sınıf")
+            print(f" ImageNet claases loaded: {len(class_labels)} sınıf")
         except FileNotFoundError:
             print(f" JSON dosyası bulunamadı: {json_path}")
             class_labels = {}
@@ -86,47 +86,33 @@ class ImageClassifier(Component):
         }
 
     def preprocess_image(self, cv_image):
+        if cv_image is None:
+            raise ValueError("preprocess_image() input is None.")
+
+        if len(cv_image.shape) == 2:
+            cv_image = cv2.cvtColor(cv_image, cv2.COLOR_GRAY2BGR)
+
+        if cv_image.dtype != np.uint8:
+            if np.max(cv_image) <= 1.0:
+                cv_image = (cv_image * 255).astype(np.uint8)
+            else:
+                cv_image = cv_image.astype(np.uint8)
 
         rgb_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
-
         pil_image = PILImage.fromarray(rgb_image)
-
-        tensor = self.transform(pil_image).unsqueeze(0)  # Batch dimension ekle
-
+        tensor = self.transform(pil_image).unsqueeze(0)
         return tensor.to(self.device)
 
-    def predict(self, img):
-        """Image classification prediction"""
-
-        input_tensor = self.preprocess_image(img)
-
-        with torch.no_grad():
-            outputs = self.model(input_tensor)
-            probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
-
-        top_probabilities, top_indices = torch.topk(probabilities, self.top_k)
-
-        predictions = []
-        for i in range(self.top_k):
-            class_idx = top_indices[i].item()
-            confidence = top_probabilities[i].item()
-
-            if confidence >= self.confidence_threshold:
-                class_name = self.class_labels.get(str(class_idx), f"class_{class_idx}")
-                predictions.append({
-                    'class_name': class_name,
-                    'confidence': round(confidence * 100, 2),
-                    'class_id': class_idx
-                })
-
-        return predictions
-
     def run(self):
-
-        print(" ImageClassifier başlatılıyor...")
+        print(" ImageClassifier is starting...")
 
         img = Image.get_frame(img=self.image, redis_db=self.redis_db)
-        print(f" Image shape: {img.value.shape}")
+
+        if img.value is None:
+            raise ValueError(" (img.value is None). ImageLoad çıktısı eksik olabilir.")
+
+        print(f" Image shape: {img.value.shape}, dtype: {img.value.dtype}")
+        print(f" Min: {np.min(img.value)}, Max: {np.max(img.value)}")
 
         # Prediction yap
         predictions = self.predict(img.value)
