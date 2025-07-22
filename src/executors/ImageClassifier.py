@@ -103,6 +103,32 @@ class ImageClassifier(Component):
         tensor = self.transform(pil_image).unsqueeze(0)
         return tensor.to(self.device)
 
+    def predict(self, img):
+        """Image classification prediction"""
+
+        input_tensor = self.preprocess_image(img)
+
+        with torch.no_grad():
+            outputs = self.model(input_tensor)
+            probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
+
+        top_probabilities, top_indices = torch.topk(probabilities, self.top_k)
+
+        predictions = []
+        for i in range(self.top_k):
+            class_idx = top_indices[i].item()
+            confidence = top_probabilities[i].item()
+
+            if confidence >= self.confidence_threshold:
+                class_name = self.class_labels.get(str(class_idx), f"class_{class_idx}")
+                predictions.append({
+                    'class_name': class_name,
+                    'confidence': round(confidence * 100, 2),
+                    'class_id': class_idx
+                })
+
+        return predictions
+
     def run(self):
         print(" ImageClassifier is starting...")
 
@@ -121,8 +147,8 @@ class ImageClassifier(Component):
         img.metadata = {
             'predictions': predictions,
             'model_type': 'image_classification',
-            'top_k': self.top_k,
-            'confidence_threshold': self.confidence_threshold
+            'top_k': self.top_k or 5,
+            'confidence_threshold': self.confidence_threshold or 0.5
         }
 
         self.image = Image.set_frame(
