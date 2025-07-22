@@ -120,7 +120,11 @@ class ImageClassifier(Component):
             confidence = top_probabilities[i].item()
 
             if confidence >= self.confidence_threshold:
-                class_name = self.class_labels.get(str(class_idx), f"class_{class_idx}")
+                if 0 <= class_idx < len(self.class_labels):
+                    class_name = self.class_labels[class_idx]
+                else:
+                    class_name = f"class_{class_idx}"
+
                 predictions.append({
                     'class_name': class_name,
                     'confidence': round(confidence * 100, 2),
